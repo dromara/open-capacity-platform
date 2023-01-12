@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>webuploader</title>
+</head>
+<!--引入CSS-->
+<link rel="stylesheet" type="text/css" href="https://cdn.bootcss.com/webuploader/0.1.1/webuploader.css">
+<style>
+    #upload-container, #upload-list{width: 500px; margin: 0 auto; }
+    #upload-container{cursor: pointer; border-radius: 15px; background: #EEEFFF; height: 200px;}
+    #upload-list{height: 800px; border: 1px solid #EEE; border-radius: 5px; margin-top: 10px; padding: 10px 20px;}
+    #upload-container>span{widows: 100%; text-align: center; color: gray; display: block; padding-top: 15%;}
+    .upload-item{margin-top: 5px; padding-bottom: 5px; border-bottom: 1px dashed gray;}
+    .percentage{height: 5px; background: green;}
+    .btn-delete, .btn-retry{cursor: pointer; color: gray;}
+    .btn-delete:hover{color: orange;}
+    .btn-retry:hover{color: green;}
+</style>
+<!--引入JS-->
+<body>
+<div id="upload-container">
+    <span>点击或将文件拖拽至此上传</span>
+</div>
+<div id="upload-list">
+
+</div>
+<button id="picker" style="display: none;">点击上传文件</button>
+</body>
+<script src="http://lib.sinaapp.com/js/jquery/2.0.2/jquery-2.0.2.min.js"></script>
+<script src="https://cdn.bootcss.com/webuploader/0.1.1/webuploader.js"></script>
+<script>
+    var GUID = WebUploader.Base.guid();//一个GUID
+    // upload-container 点击事件
+    $('#upload-container').click(function(event) {
+        $("#picker").find('input').click();
+    });
+
+    var uploader = WebUploader.create({
+        auto: true,// 选完文件后，是否自动上传。
+        dnd: '#upload-container',
+        // swf文件路径
+        swf: 'http://cdn.staticfile.org/webuploader/0.1.5/Uploader.swf',
+        // 文件接收服务端。
+        // server: './files-anon/bigFile',
+        server: './file/files-anon/bigFile',
+        formData:{
+            guid : GUID
+        },
+        // 选择文件的按钮。可选。
+        // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+        pick: {
+            id: '#picker',
+            multiple: false, // 选择多个
+            label: '点击选择文件'
+        },
+        fileNumLimit: 1,
+        chunked : true, // 分片处理
+        chunkSize : 1 * 1024 * 1024, // 每片32M,
+        chunkRetry : false,// 如果失败，则不重试
+        threads : 1,// 上传并发数。允许同时最大上传进程数。
+        // 不压缩image, 默认如果是jpeg，文件上传前会压缩一把再上传！
+        resize: false
+    });
+
+    //当有一批文件加载进队列时触发事件
+    uploader.on('fileQueued', function(file) {
+        // 选中文件时要做的事情，比如在页面中显示选中的文件并添加到文件列表，获取文件的大小，文件类型等
+        console.log(file.ext) // 获取文件的后缀
+        console.log(file.size) // 获取文件的大小
+        console.log(file.name);
+        var html = '<div class="upload-item"><span>文件名：'+file.name+'</span><span data-file_id="'+file.id+'" class="btn-delete">删除</span><span data-file_id="'+file.id+'" class="btn-retry">重试</span><div class="percentage '+file.id+'" style="width: 0%;"></div></div>';
+        $('#upload-list').append(html);
+    });
+
+    //上传过程中 回调
+    uploader.on('uploadProgress', function(file, percentage) {
+        console.log(percentage * 100 + '%');
+        var width = $('.upload-item').width();
+        $('.'+file.id).width(width*percentage);
+    });
+
+    //上传 成功回调
+    uploader .on('uploadSuccess', function(file) {
+        $.ajax({
+            url:'/file/files-anon/merge',
+            type:"POST",
+            data: JSON.stringify(  { guid: GUID, fileName: file.name } ) ,
+            contentType:"application/json; charset=utf-8",
+            dataType: "json",
+            success: function(data){
+                if(data.code == 0){
+                    alert('上传成功!');
+                }
+        }})
+    });
+
+    //上传 失败回调
+    uploader.on('uploadError', function(file) {
+        console.log(file);
+        console.log(file.id+'upload error')
+        $.ajax({
+            url:'file/files-anon/uploadError',
+            type:"POST",
+            data: JSON.stringify(  { guid: GUID, fileName: file.name } ) ,
+            contentType:"application/json; charset=utf-8",
+            dataType: "json",
+            success: function(data){
+                if(data.code == 0){
+                    alert('上传失败,清理临时文件');
+                }
+        }})
+    });
+
+    //删除按钮 有bug 无法从队列删除 uploader.removeFile 有问题
+    $('#upload-list').on('click', '.upload-item .btn-delete', function() {
+        // 从文件队列中删除某个文件id
+        file_id = $(this).data('file_id');
+        console.log(file_id);
+        console.log(uploader.getFile(file_id));
+        // uploader.removeFile(file_id); // 标记文件状态为已取消
+        uploader.removeFile(uploader.getFile(file_id), true);// 从queue中删除
+        console.log(uploader.getFiles());
+    });
+
+    //重试按钮
+    $('#upload-list').on('click', '.btn-retry', function() {
+        uploader.retry($(this).data('file_id'));
+    });
+
+    //文件全部上传完成后 打印文件队列
+    uploader.on('uploadComplete', function(file) {
+        console.log(uploader.getFiles());
+    });
+</script>
+</html>

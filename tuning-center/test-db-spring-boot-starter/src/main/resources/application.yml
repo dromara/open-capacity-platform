@@ -1,0 +1,34 @@
+spring:
+  shardingsphere:
+    sharding:
+      default-data-source-name: ds0
+      default-key-generator:
+        column: id
+        props:
+          worker:
+            id: ${workerId}
+        type: SNOWFLAKE
+    datasource:
+      names: ds0
+      ds0:
+        connectionTimeoutMilliseconds: 30000
+        idleTimeoutMilliseconds: 60000
+        maintenanceIntervalMilliseconds: 30000
+        maxLifetimeMilliseconds: 1800000
+        maxPoolSize: 50
+        minPoolSize: 50
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        type: com.zaxxer.hikari.HikariDataSource
+        username: ${ocp.datasource.username}
+        password: ${ocp.datasource.password}
+        jdbc-url: jdbc:mysql://${ocp.datasource.ip:192.168.92.216}:${ocp.datasource.port:3306}/user-center1?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai
+    
+
+mybatis-plus:
+  mapper-locations: com/open/**/mapper/*Mapper.xml
+  #实体扫描，多个package用逗号或者分号分隔
+  typeAliasesPackage: com.open.capacity.common.model
+  global-config:
+    banner: false
+    db-config:
+      id-type: auto

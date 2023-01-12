@@ -1,0 +1,47 @@
+# maven ignore
+target/
+*.jar
+*.war
+*.zip
+*.gz
+*.tar
+*.tar.gz
+*.log.gz
+*.class
+*.project
+*.factorypath
+*.flattened-pom.xml
+
+# eclipse ignore
+.settings/
+.classpath
+target/
+bin/
+NewCustServSer/
+SrenewSer/
+sms-drugstore/
+
+# idea ignore
+.idea/
+*.ipr
+*.iml
+*.iws
+
+# temp ignore
+*.log
+*.cache
+*.diff
+*.patch
+*.tmp
+
+# system ignore
+.DS_Store
+Thumbs.db
+
+# else
+.springBeans
+/register-center/nacos-server/target/nacos.part1.rar
+/register-center/nacos-server/target/nacos.part2.rar
+/register-center/nacos-server/target/nacos.part3.rar
+MANIFEST.MF
+

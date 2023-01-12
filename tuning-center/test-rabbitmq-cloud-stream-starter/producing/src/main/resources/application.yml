@@ -1,0 +1,20 @@
+spring:
+  rabbitmq:
+    addresses: 192.168.11.201
+    port: 5672
+    username: admin
+    password: 123456
+  cloud:
+    stream:
+      bindings:
+        packetUplinkOutput:
+          destination: packetUplinkTopic
+          content-type: application/json
+          binder: rabbit
+      rabbit:
+        bindings:
+          packetUplinkOutput:
+            producer:
+              # 生产者配置RabbitMq的动态路由键
+              delayedExchange: true #延迟队列
+              routingKeyExpression: headers.type  

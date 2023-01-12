@@ -1,0 +1,27 @@
+server:
+  port: 9997
+spring:
+  application:
+    name: auth-sso
+security:
+  ignored: /,/favicon.ico,/home.html,/dashboard.html,/js/**,/css/**,/webjars/**
+  sessions: ALWAYS
+  user:
+    password: 123456
+  oauth2:
+    sso:
+      login-path: /clientOne/login
+    client:
+      client-id: owen
+      client-secret: owen 
+      user-authorization-uri: http://127.0.0.1:8000/api-auth/oauth/authorize    
+      access-token-uri: http://127.0.0.1:8000/api-auth/oauth/token
+    resource: 
+#        user-info-uri: http://127.0.0.1:8000/api-auth/auth/users #返回认证服务器检查
+#        prefer-token-info: false
+      token-info-uri: http://127.0.0.1:8000/api-auth/oauth/check_token
+      prefer-token-info: true
+ 
+ 
+
+  

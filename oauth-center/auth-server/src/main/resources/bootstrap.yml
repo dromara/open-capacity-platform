@@ -1,0 +1,29 @@
+server:
+  port: 8000
+  servlet:
+    context-path: /api-auth
+    session:
+        name: OAUTH2SESSION
+  use-forward-headers: false          
+
+encrypt:
+  key-store:
+    alias: ocp
+    location: classpath:ocp.jks
+    secret: 123456
+
+spring:
+  cloud:
+    nacos:
+      discovery:
+        metadata:
+          management:
+            context-path: ${server.servlet.context-path}/actuator
+  application:
+    name: @artifactId@
+#  cloud:
+#    nacos:
+#      discovery:
+#        metadata:
+#          version: v1
+#          weight: 5              

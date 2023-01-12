@@ -1,0 +1,183 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.open.capacity</groupId>
+		<artifactId>open-capacity-platform</artifactId>
+		<version>${revision}</version>
+	</parent>
+
+	<artifactId>new-api-gateway</artifactId>
+
+	<properties>
+		<swagger.version>2.9.2</swagger.version>
+	</properties>
+
+	<dependencies>
+		<!-- 启动图标 -->
+		<dependency>
+			<groupId>com.open.capacity</groupId>
+			<artifactId>banner-spring-boot-starter</artifactId>
+		</dependency>
+		<!-- 认证 -->
+		<dependency>
+			<groupId>org.springframework.security.oauth</groupId>
+			<artifactId>spring-security-oauth2</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-oauth2-resource-server</artifactId>
+		</dependency>
+		<!-- 配置中心 -->
+		<dependency>
+			<groupId>com.open.capacity</groupId>
+			<artifactId>config-spring-boot-starter</artifactId>
+		</dependency>
+		<!-- 基础工具 -->
+		<dependency>
+			<groupId>com.open.capacity</groupId>
+			<artifactId>base-spring-boot-starter</artifactId>
+		</dependency>
+		<!-- 关系型数据库配置 -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.open.capacity</groupId>
+			<artifactId>db-spring-boot-starter</artifactId>
+		</dependency>
+		<!-- redis -->
+		<dependency>
+			<groupId>com.open.capacity</groupId>
+			<artifactId>redis-spring-boot-starter</artifactId>
+		</dependency>
+		<!-- 日志中心 -->
+		<dependency>
+			<groupId>com.open.capacity</groupId>
+			<artifactId>log-spring-boot-starter</artifactId>
+		</dependency>
+		<!-- 异常处理 -->
+		<dependency>
+			<groupId>org.zalando</groupId>
+			<artifactId>problem-spring-webflux</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.espertech</groupId>
+			<artifactId>esper</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>commons-chain</groupId>
+			<artifactId>commons-chain</artifactId>
+		</dependency>
+
+		<!-- 负载均衡器 -->
+		<dependency>
+			<groupId>com.open.capacity</groupId>
+			<artifactId>loadbalancer-spring-boot-starter</artifactId>
+		</dependency>
+		<!-- 熔断限流组件 -->
+		<dependency>
+			<groupId>com.open.capacity</groupId>
+			<artifactId>sentinel-spring-boot-starter</artifactId>
+		</dependency>
+		<!-- sentinel 网关限流 -->
+		<dependency>
+			<groupId>com.alibaba.cloud</groupId>
+			<artifactId>spring-cloud-alibaba-sentinel-gateway</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.open.capacity</groupId>
+			<artifactId>uaa-client-spring-boot-starter</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-gateway</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.alibaba.cloud</groupId>
+			<artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webflux</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-openfeign</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<!-- swagger -->
+
+		<dependency>
+			<groupId>com.github.xiaoymin</groupId>
+			<artifactId>knife4j-aggregation-spring-boot-starter</artifactId>
+			<version>2.0.8</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.xiaoymin</groupId>
+			<artifactId>knife4j-spring-boot-starter</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.baomidou</groupId>
+			<artifactId>mybatis-plus-extension</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.micrometer</groupId>
+			<artifactId>micrometer-registry-prometheus</artifactId>
+		</dependency>
+
+	</dependencies>
+
+	<!-- 形成带第三方jar包的可执行jar包，jar包目录结构如下 application.properties lib META-INF mybatis 
+		org -->
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+
+			<!-- 首先加入pom ${docker.image.prefix} ： 这个是你的dockerhub注册上面的名字 gitgeek 这个是我注册的 
+				${project.artifactId} ： 项目的名称 dockerDirectory ： dockerfile的文件路径 -->
+			<plugin>
+				<groupId>com.spotify</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<version>0.4.13</version>
+				<configuration>
+					<imageName>${docker.image.prefix}/${project.artifactId}</imageName>
+					<dockerDirectory>src/main/docker</dockerDirectory>
+					<dockerHost>${docker.host}</dockerHost>
+					<resources>
+						<resource>
+							<targetPath>/</targetPath>
+							<directory>${project.build.directory}</directory>
+							<include>${project.build.finalName}.jar</include>
+						</resource>
+					</resources>
+				</configuration>
+			</plugin>
+
+		</plugins>
+		<finalName>${project.artifactId}</finalName>
+	</build>
+
+</project>

@@ -1,0 +1,48 @@
+<propertys>
+	<property name="selectList">
+        <![CDATA[{
+        	##排序
+            "sort": [  
+                {
+                    "@timestamp": {
+                        "order": "desc"
+                    }
+                }
+            ],
+			"query": {
+				"bool": {
+					"must": [
+					    #if($lat)
+						{
+							"match": {
+								"traceId":  #[lat] 
+							}
+						},
+						#end
+						#if($lon)
+						{
+							"term": {
+								"lon":  {
+								   "value": #[lon] 
+								}
+							}
+						},
+						#end
+						{
+							"range": {
+								"@timestamp": {
+									##统计开始时间
+									"gte": #[startTime],
+									##统计截止时间
+                                    "lt": #[endTime]  
+								}
+							}
+						}
+					]
+				}
+			},
+			"from": #[from],
+			"size": #[size]
+		}]]>
+	</property>
+</propertys>

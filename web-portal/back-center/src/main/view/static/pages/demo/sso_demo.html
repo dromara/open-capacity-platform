@@ -1,0 +1,67 @@
+<style>
+    .grid-demo {
+        background-color: #63BA79;
+        padding: 10px;
+        line-height: 50px;
+        text-align: center;
+        color: #fff;
+        cursor: pointer;
+    }
+</style>
+
+<div class="layui-card">
+    <div class="layui-card-header">
+      <h2 class="header-title">自定义单点登录</h2>
+      <span class="layui-breadcrumb pull-right">
+            <a href="#!console">首页</a>
+            <a><cite>自定义单点登录</cite></a>
+          </span>
+    </div>
+    <div class="layui-card-body">
+        <div class="layui-row layui-col-space10">
+            <div class="layui-col-md3">
+                <div class="grid-demo grid-demo-bg1" id="sys1">系统1</div>
+            </div>
+            <div class="layui-col-md3">
+                <div class="grid-demo grid-demo-bg1">系统2</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    layui.use(['util', 'config', 'admin'], function () {
+        let util = layui.util;
+        let config = layui.config;
+        let admin = layui.admin;
+
+        $('#sys1').click(function (e) {
+            let userName = 'admin';
+            $.ajax({
+                url: 'http://127.0.0.1:9900/api-auth/oauth/ssoBeforeLogin',
+                type: 'get',
+                data: {
+                    userName: userName,
+                },
+                dataType: 'json',
+                async: false,
+                cache: false,
+                success: function (data)  {
+                    if (data.statusCodeValue == 0) {
+                        let uuid = data.datas;
+                        // 此处尽量先加密然后再编码
+                        let txt1 = userName;
+                        let txt2 = uuid;
+                        let url = 'http://127.0.0.1:8066/login.html?txt1=' + encodeURIComponent(txt1) + '&txt2=' + encodeURIComponent(txt2);
+                        window.open(url);
+                    } else {
+                        layer.msg(data.msg, {icon: 2, time: 1500});
+                    }
+                },
+                error: function (xhr, text, e) {
+                    layer.msg('请求失败', {icon: 2, time: 1500});
+                }
+            });
+        });
+    });
+</script>

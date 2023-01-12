@@ -1,0 +1,5 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.open.capacity.common.filter.tenant.TenantFilter,\
+com.open.capacity.common.filter.user.LoginUserFilter,\
+com.open.capacity.common.filter.xss.RequestWrapperFilter,\
+com.open.capacity.common.idempotent.IdempotentAutoConfiguration

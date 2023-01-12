@@ -1,0 +1,104 @@
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+</head>
+
+<body>
+<style>
+    .container {
+        border-bottom: 1px solid #ccc;
+        margin-bottom: 15px;
+    }
+
+    .uploadHolderWrapper {
+        margin: auto;
+        width: 400px
+    }
+
+    .uploadHolder {
+        margin-bottom: 25px;
+    }
+
+    .upload {
+        margin-bottom: 15px;
+    }
+</style>
+
+
+<div class="w3-container w3-teal">
+    <h1>Multi file upload demo</h1>
+</div>
+
+<div class="w3-container container">
+    <p>Click on the Choose files and select as many files as you like.</p>
+    <p>Click Add Input button to add new input field.</p>
+    <p>Click Start upload to upload files.</p>
+</div>
+
+<div class="uploadHolderWrapper">
+    <div class="uploadHolder" id="uploadHolder">
+        <input class="upload" type="file" multiple>
+    </div>
+
+    <button type="button" id="upcvr" class="btn btn-primary" onclick="upload()">Start Upload</button>
+    <button type="button" class="btn btn-primary" onclick="addInput()">Add Input</button>
+</div>
+
+<script>
+    /**
+     * Upload files that are chosen by the user.
+     */
+    function upload() {
+        var inputs = document.getElementsByClassName('upload');//return all upload inputs
+
+        var files = [];
+        // for each input extract the files and put them in the files array.
+        for (var i = 0; i < inputs.length; i++) {
+            var fileList = inputs[i].files;// Returns FileList
+
+            for (var j = 0; j < fileList.length; j++) {
+                files.push(fileList[j]);
+            }
+        }
+
+        // upload all files to the server.
+        uploadFiles(files);
+    }
+
+    /**
+     * Upload files.
+     */
+    function uploadFiles(files) {
+        var formData = new FormData();
+        for (var i = 0; i < files.length; i++) {
+            formData.append("files", files[i]);
+        }
+        try {
+            fetch('/file/upload', {method: "POST", body: formData}).then(function (respo) {
+                if (respo.status !== 200) {
+                    alert('Something went wrong');
+                } else {
+                    alert("Upload is completed.");
+                }
+            });
+        } catch (e) {
+            alert('Something went wrong');
+        }
+    }
+
+    /**
+     * Add input to the document.
+     */
+    function addInput() {
+        var input = document.createElement("input");
+        input.type = "file";
+        input.className = "upload";
+        input.multiple = true;
+
+        var holder = document.getElementById("uploadHolder");
+        holder.appendChild(input);
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+server:
+  port: 7000
+
+spring:
+  rabbitmq:
+    addresses: 192.168.11.201
+    port: 5672
+    username: admin
+    password: 123456
+  cloud:
+    stream:
+      bindings:
+        waterLevelInput:
+          destination: packetUplinkTopic
+          content-type: application/json
+          group: waterLevel
+          binder: rabbit
+          consumer:
+            max-attempts: 3
+            # 重试时最大避退间隔，单位毫秒，默认10000
+            backOffInitialInterval: 1000
+            backOffMaxInterval: 10000 
+            # 避退乘数，默认2.0
+            backOffMultiplier: 2.0
+        temperatureInput:
+          destination: packetUplinkTopic
+          content-type: application/json
+          group: temperature
+          binder: rabbit
+          consumer:
+            max-attempts: 3
+            # 重试时最大避退间隔，单位毫秒，默认10000
+            backOffInitialInterval: 1000
+            backOffMaxInterval: 10000 
+            # 避退乘数，默认2.0
+            backOffMultiplier: 2.0
+        temperatureInputError:
+          destination: packetUplinkTopic
+          content-type: application/json
+          group: temperature.dlq
+          binder: rabbit
+          consumer:
+            max-attempts: 3
+            # 重试时最大避退间隔，单位毫秒，默认10000
+            backOffInitialInterval: 1000
+            backOffMaxInterval: 10000 
+            # 避退乘数，默认2.0
+            backOffMultiplier: 2.0    
+      rabbit:
+        bindings:
+          waterLevelInput:
+            consumer:
+              # 重试时初始避退间隔，单位毫秒，默认1000
+              delayedExchange: true
+              ttl: 20000 #
+              acknowledgeMode: manual
+              bindingRoutingKey: 'short_link.add.link.*.routing.key'  # 将queue绑定到exchange时使用的routing key。默认'#'
+          temperatureInput:
+            consumer:
+              delayedExchange: true #延迟队列
+              acknowledge-mode: manual
+              bindingRoutingKey: 'short_link.add.*.mapping.routing.key' # 将queue绑定到exchange时使用的routing key。默认'#'
+              ttl: 20000 # 默认不做限制，即无限。消息在队列中最大的存活时间。当消息滞留超过ttl时，会被当成消费失败消息，即会被转发到死信队列或丢弃.即消息在队列中存活的最大时间为 20s
+              # DLQ相关
+              autoBindDlq: true # 是否自动声明死信队列（DLQ）并将其绑定到死信交换机（DLX）。默认是false。
+              republishToDlq: true
+          temperatureInputError:
+            consumer:
+              # 重试时初始避退间隔，单位毫秒，默认1000
+              delayedExchange: true
+              acknowledgeMode: auto
+              bindingRoutingKey: #

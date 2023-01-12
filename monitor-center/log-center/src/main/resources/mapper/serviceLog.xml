@@ -1,0 +1,60 @@
+<propertys>
+	<property name="selectList">
+        <![CDATA[{
+        	##排序
+            "sort": [  
+                {
+                    "timestamp": {
+                        "order": "desc"
+                    }
+                }
+            ],
+			"query": {
+				"bool": {
+					"must": [
+					    #if($traceId)
+						{
+							"match": {
+								"traceId":  #[traceId] 
+							}
+						},
+						#end
+						#if($appName)
+						{
+							"term": {
+								"appName.keyword":  #[appName] 
+							}
+						},
+						#end
+						#if($serverIp)
+						{
+							"term": {
+								"serverIp.keyword":  #[serverIp] 
+							}
+						},
+						#end
+						#if($message)
+						{
+							"match": {
+								"message":  #[message] 
+							}
+						},
+						#end
+						{
+							"range": {
+								"timestamp": {
+									##统计开始时间
+									"gte": #[startTime],
+									##统计截止时间
+                                    "lt": #[endTime]  
+								}
+							}
+						}
+					]
+				}
+			},
+			"from": #[from],
+			"size": #[size]
+		}]]>
+	</property>
+</propertys>

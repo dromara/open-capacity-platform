@@ -1,0 +1,20 @@
+# 注册中心 
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.92.216:8848
+        namespace: 0415e4d7-c6e4-4096-ae54-f4bba406d744  #命名空间 代指某个环境
+  sentinel:
+      transport:
+        # 指定sentinel 控制台的地址
+        dashboard: 127.0.0.1:8080
+      eager: true         
+  jackson:
+        mapper:
+            ALLOW_EXPLICIT_PROPERTY_RENAMING: true
+        deserialization:
+            READ_DATE_TIMESTAMPS_AS_NANOSECONDS: false
+        serialization:
+            WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS: false
+            WRITE_DATES_AS_TIMESTAMPS: true

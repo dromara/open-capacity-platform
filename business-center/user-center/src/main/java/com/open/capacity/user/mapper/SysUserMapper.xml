@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.open.capacity.user.mapper.SysUserMapper">
+
+	 <resultMap id="userEnc" type="com.open.capacity.common.model.SysUser">
+        <id column="id" property="id"></id>
+        <result column="username" property="username" typeHandler="com.open.capacity.db.typehandler.CryptTypeHandler"></result>
+        <result column="password" property="password" typeHandler="com.open.capacity.db.typehandler.CryptTypeHandler"></result>
+        <result column="mobile" property="mobile" typeHandler="com.open.capacity.db.typehandler.CryptTypeHandler"></result>
+    </resultMap>
+
+  
+
+    <select id="selectListEnc" parameterType="com.open.capacity.common.model.SysUser" resultMap="userEnc">
+        select id,username,password,mobile
+        from sys_user
+        <where>
+            <if test="sysUser.username != null and sysUser.username != ''">
+                and username like concat('%',concat(#{sysUser.username,typeHandler=com.open.capacity.db.typehandler.CryptTypeHandler},'%'))
+            </if>
+            <if test="sysUser.mobile != null and sysUser.mobile != ''">
+                and mobile like concat('%',concat(#{sysUser.mobile,typeHandler=com.open.capacity.db.typehandler.CryptTypeHandler},'%'))
+            </if>
+        </where>
+        order by 2
+    </select>
+
+	<sql id="where">
+		<where>
+			t.is_del=0
+			<if test="params.id != null and params.id != ''">
+				and t.id like concat('%', #{params.id}, '%')
+			</if>
+			<if test="params.username != null and params.username != ''">
+				and t.username like concat('%', #{params.username}, '%')
+			</if>
+			<if test="params.nickname != null and params.nickname != ''">
+				and t.nickname like concat('%', #{params.nickname}, '%')
+			</if>
+			<if test="params.enabled != null and params.enabled != ''">
+				and t.enabled = #{params.enabled}
+			</if>
+			<if test="params.type != null and params.type != ''">
+				and t.type = #{params.type}
+			</if>
+			<if test="params.searchKey != null and params.searchKey != '' and params.searchKey=='user_id'">
+				and t.id  like concat('%', #{params.searchValue}, '%')
+			</if>
+			<if test="params.searchKey != null and params.searchKey != '' and params.searchKey=='username'">
+				and t.username  like concat('%', #{params.searchValue}, '%')
+			</if>
+			<if test="params.searchKey != null and params.searchKey != '' and params.searchKey=='nick_name'">
+				and t.nickname  like concat('%', #{params.searchValue}, '%')
+			</if>
+			<if test="params.searchKey != null and params.searchKey != '' and params.searchKey=='mobile'">
+				and t.mobile  like concat('%', #{params.searchValue}, '%')
+			</if>
+		</where>
+	</sql>
+
+	<select id="findList" resultType="com.open.capacity.common.model.SysUser">
+		select * from sys_user t
+		<include refid="where" />
+		order by t.id desc
+	</select>
+</mapper>

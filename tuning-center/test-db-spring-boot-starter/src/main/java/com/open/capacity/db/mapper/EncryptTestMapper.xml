@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.open.capacity.db.mapper.EncryptTestMapper">
+
+    <resultMap id="userEnc" type="com.open.capacity.common.model.SysUser">
+        <id column="id" property="id"></id>
+        <result column="username" property="username" typeHandler="com.open.capacity.db.typehandler.CryptTypeHandler"></result>
+        <result column="password" property="password" typeHandler="com.open.capacity.db.typehandler.CryptTypeHandler"></result>
+        <result column="mobile" property="mobile" typeHandler="com.open.capacity.db.typehandler.CryptTypeHandler"></result>
+    </resultMap>
+
+    <insert id="insertEnc" parameterType="com.open.capacity.common.model.SysUser">
+        insert into sys_user_enc (id,username,password,phone,type,create_time,update_time)
+        values (#{id},
+                #{username,typeHandler=com.open.capacity.db.typehandler.CryptTypeHandler},
+                #{password,typeHandler=com.open.capacity.db.typehandler.CryptTypeHandler},
+                #{mobile,typeHandler=com.open.capacity.db.typehandler.CryptTypeHandler},
+                #{type},
+                #{createTime},
+                #{updateTime})
+    </insert>
+
+    <select id="selectListEnc" parameterType="com.open.capacity.common.model.SysUser" resultMap="userEnc">
+        select id,username,password,phone
+        from sys_user_enc
+        <where>
+            <if test="sysUser.username != null and sysUser.username != ''">
+                and username like concat('%',concat(#{sysUser.username,typeHandler=com.open.capacity.db.typehandler.CryptTypeHandler},'%'))
+            </if>
+            <if test="sysUser.mobile != null and sysUser.mobile != ''">
+                and phone like concat('%',concat(#{sysUser.mobile,typeHandler=com.open.capacity.db.typehandler.CryptTypeHandler},'%'))
+            </if>
+        </where>
+    </select>
+</mapper>

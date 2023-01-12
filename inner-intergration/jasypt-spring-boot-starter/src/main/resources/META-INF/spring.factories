@@ -1,0 +1,6 @@
+org.springframework.context.ApplicationListener=\
+com.ulisesbocchio.jasyptspringboot.configuration.EnableEncryptablePropertiesBeanFactoryPostProcessor
+
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.ulisesbocchio.jasyptspringboot.JasyptSpringBootAutoConfiguration,\
+com.ulisesbocchio.jasyptspringboot.JasyptSpringCloudBootstrapConfiguration 

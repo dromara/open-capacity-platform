@@ -1,0 +1,250 @@
+* {
+  padding: 0;
+  margin: 0
+}
+html, body {
+  /* height: 100%; */
+  overflow-y: scroll; 
+  background-color: #f5f5f5;
+}
+input {
+  background: none;
+  outline: none;
+  border: none;
+}
+.topwrapper {
+  position: relative;
+  height: 45px;
+  line-height: 45px;
+  background-color: #fff;
+  text-align: center;
+  font-size: 18px;
+}
+.topwrapper img {
+  position: absolute;
+  left: 15px;
+  top: 14.5px;
+}
+.content {
+  padding: 15px;
+  position: relative;
+}
+.flag {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.flag .xing {
+  margin-right: 5px;
+  width: 5px;
+  height: 5px;
+  border-radius: 5px;
+  background-color: red;
+}
+.flag title {
+  font-size: 16px;
+}
+#param input {
+  display: block;
+  margin-bottom: 15px;
+  width: 100%;
+  height: 45px;
+  text-align: center;
+  background: #fff;
+  font-size: 14px;
+  line-height: 45px;
+  border-radius: 5px;
+}
+.btnwrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 40px;
+}
+.btnwrapper .btn {
+  display: block;
+  width: 100%;
+  height: 45px;
+  line-height: 45px;
+  text-align: center;
+  border: solid 1px #33a6fa;
+  border-radius: 20px;
+  color: #33a6fa;
+  font-size: 18px;
+}
+#imgshow {
+  display: none; 
+  position: relative;
+  margin-top: 15px;
+  text-align: center; 
+}
+#imgshow #rect {
+  position: absolute;
+  border: 2px solid #ffff00;
+}
+#imgshow img {
+  width: 100%;
+  height: 100%;    
+  border-radius: 10px;
+}
+
+.button {
+  margin-top: 15px;
+  display: block;
+  height: 45px;
+  line-height: 45px;
+  width: 100%;
+  text-align: center;
+  border-radius: 20px;
+  background-color: #33a6fa;
+  font-size: 18px;
+  color: #fff;
+}
+#file {
+  display: none;
+}
+#info {
+  display: none; 
+}
+.toptittle {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15px;
+  color: #33a6fa;
+}
+.toptittle .line{
+  width: 100px;
+  border-bottom: 1px solid #33a6fa;
+}
+.toptittle .cont {
+  display: inline-flex;
+  align-items: center;
+}
+.toptittle .text {
+  margin-left: 3px;
+  font-size: 18px;
+}
+
+.middletext {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  margin-top: 20px;
+}
+.middletext .line {
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+.middletext .line img {
+  margin-right: 10px;
+}
+.wrapper {
+  margin: 40px 20px;
+}
+.wrapper .welcome {
+  margin-bottom: 15px;
+  font-size: 36px;
+  font-style: italic;
+}
+.wrapper .title {
+  font-size: 24px;
+}
+.wrapper .btnwrap {
+  margin-top: 100px;
+}
+.wrapper .btn {
+  margin-bottom: 15px;
+  width: 100%;
+  height: 45px;
+  line-height: 45px;
+  text-align: center;
+  background-color: #33a6fa;
+  border-radius: 20px;
+  color: #fff;
+  font-size: 18px;
+}
+.loading {
+  display: none;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-left: -150px;
+  margin-top: -50px;
+  height: 100px;
+  width: 300px;
+  background-color: #fff;
+  border-radius: 10px;
+  text-align: center;
+  line-height: 100px;
+}
+
+video{
+  transform: rotateY(180deg);
+  -webkit-transform: rotateY(180deg);    /* Safari 和 Chrome */
+  -moz-transform: rotateY(180deg);
+}
+.load {
+  z-index:1;
+  border-radius:120px;
+  width:240px;
+  height:240px;
+  border:6px solid rgb(97,174,238);
+  border-bottom:6px solid transparent;
+  border-right:6px solid transparent;
+  animation:1s loading linear infinite;
+  position:absolute;
+  top:80px;
+  left:50%;
+  margin-left:-120px;
+}
+@keyframes load {
+  50% {
+    transform:rotate(180deg);
+  }
+  100% {
+    transform:rotate(360deg);
+  }
+}
+
+#show {
+  display: none;
+  margin-top: 15px;
+  text-align: center; 
+}
+#show img {
+  
+  border-radius: 10px;
+}
+
+video{
+  transform: rotateY(180deg);
+  -webkit-transform: rotateY(180deg);    /* Safari 和 Chrome */
+  -moz-transform: rotateY(180deg);
+}
+.load {
+z-index:1;
+border-radius:120px;
+width:240px;
+height:240px;
+border:6px solid rgb(97,174,238);
+border-bottom:6px solid transparent;
+border-right:6px solid transparent;
+animation:1s loading linear infinite;
+position:absolute;
+top:80px;
+left:50%;
+margin-left:-120px;
+}
+@keyframes load {
+50% {
+transform:rotate(180deg);
+}
+100% {
+transform:rotate(360deg);
+}
+}

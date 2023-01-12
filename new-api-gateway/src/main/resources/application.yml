@@ -1,0 +1,164 @@
+spring:
+  datasource:
+    druid:
+      url: jdbc:mysql://${ocp.datasource.ip:192.168.92.216}:${ocp.datasource.port:3306}/oauth-center?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false
+      username: ${ocp.datasource.username}
+      password: ${ocp.datasource.password}
+      driver-class-name:  com.mysql.cj.jdbc.Driver
+      #连接池配置(通常来说，只需要修改initialSize、minIdle、maxActive
+      initial-size: 5
+      max-active: 50
+      min-idle: 5
+      # 配置获取连接等待超时的时间
+      max-wait: 60000
+      #打开PSCache，并且指定每个连接上PSCache的大小
+      pool-prepared-statements: true
+      max-pool-prepared-statement-per-connection-size: 20
+      validation-query: SELECT 'x'
+      test-on-borrow: false
+      test-on-return: false 
+      test-while-idle: true      
+      #配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      time-between-eviction-runs-millis: 60000
+      #配置一个连接在池中最小生存的时间，单位是毫秒
+      min-evictable-idle-time-millis: 300000
+          
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          lowerCaseServiceId: true
+      routes:
+        - id: auth
+          uri: lb://auth-server
+          predicates:
+            - Path=/api-auth/**
+          filters:
+            - RequestTrace=true
+            - StripPrefix=0
+            - PreserveHostHeader
+        - id: user
+          uri: lb://user-center
+          predicates:
+            - Path=/api-user/**
+          filters:
+            - RequestTrace=true
+            - StripPrefix=1
+        - id: file
+          uri: lb://file-center
+          predicates:
+            - Path=/api-file/**
+          filters:
+            - RequestTrace=true
+            - StripPrefix=1
+        - id: log
+          uri: lb://log-center
+          predicates:
+            - Path=/api-log/**
+          filters:
+            - RequestTrace=true
+            - StripPrefix=1
+        - id: sms
+          uri: lb://sms-center
+          predicates:
+            - Path=/api-sms/**
+          filters:
+            - RequestTrace=true
+            - StripPrefix=1    
+        - id: generator
+          uri: lb://codegen-center
+          predicates:
+            - Path=/api-generator/**
+          filters:
+            - RequestTrace=true
+            - StripPrefix=1
+            
+
+# 限流
+#    sentinel:
+#      scg:
+#        fallback:
+#          mode: response
+#          response-status: 429
+#          response-body: "{'statusCodeValue':'429' , 'msg':'接口限流了'}"
+#      datasource : 
+#        flow:
+#          nacos:
+#            server-addr: 127.0.0.1:8848
+#            dataId: ${spring.application.name}-gateway-flow-rules
+#            groupId: SENTINEL_GROUP
+#            data-type: json
+#            username: nacos
+#            password: nacos
+#            # 规则类型，取值见：
+#            # com.alibaba.cloud.sentinel.datasource.RuleType
+#            rule-type: gw-flow          # 设置 gateway flow 流控规则类型
+#      filter:
+#        enabled: true
+
+
+mybatis-plus:
+  mapper-locations:  com/open/**/mapper/*Mapper.xml
+  #实体扫描，多个package用逗号或者分号分隔
+  typeAliasesPackage: com.open.capacity.oauth.model
+  global-config:
+    banner: false
+    db-config:
+      id-type: auto
+
+ocp:
+  swagger-agg:
+    generate-routes: user,file
+  oauth2:
+    token:
+      store:
+        type: redis
+  cache-manager:
+    configs:
+      - key: auth
+        second: 1800      
+  security:
+    actuator:
+      enable: true
+    ignore:
+      # 忽略认证的地址
+      httpUrls: >
+        /api-auth/monitoring**,
+        /api-user/monitoring**,
+        /api-file/monitoring**,
+        /api-log/monitoring**,
+        /api-auth/oauth/**,
+        /api-auth/tokens/**,
+        /api-auth/websocket/**,
+        /api-auth/validata/**,
+        /api-auth/css/**,
+        /api-auth/images/**,
+        /api-auth/js/**,
+        /actuator/**,
+        /login.html,
+        /user/login,
+        /routes/**,
+        /api-auth/tokens/key,
+        /api-user/demo/signatureValidation
+    auth:
+      urlPermission:
+        #是否开启url级别权限
+        enable: false
+        #配置只进行登录认证，不进行url权限认证的api
+        ignoreUrls: >
+          /api-user/menus/current,
+          /api-user/users/current,
+          /api-user/monitoring**,
+          /api-auth/monitoring**,
+          /api-file/monitoring**,
+          /api-log/monitoring**,
+          /api-log/requestStat ,
+        #白名单
+        includeClientIds:
+          - webApp
+      renew:
+        #是否开启token自动续签（目前只有redis实现）
+        enable: true
+        #白名单
+        includeClientIds:
+          - webApp

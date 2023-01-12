@@ -1,0 +1,91 @@
+#log view
+disruptor:
+  async:
+    boss:
+      ringbufferSize: 4096
+      eventHandlerNum: 8
+    workers:
+      - channel: log
+        ringbufferSize: 4096
+        eventHandlerNum: 8
+  executors:
+    - threadPool: log
+      threadCount: 8
+
+spring:
+  #elasticsearch服务配置
+  elasticsearch:
+    bboss:
+      dslfile:
+        refreshInterval: -1
+#      elasticUser: ${ocp.elasticsearch.username}
+#      elasticPassword: ${ocp.elasticsearch.password}
+      elasticsearch:
+        dateFormat: yyyy.MM.dd
+        discoverHost: false
+        rest:
+          hostNames:  ${ocp.elasticsearch.uris} 
+        showTemplate: true
+        timeZone: Asia/Shanghai
+        ttl: 2.0
+      http:
+        connectionRequestTimeout: 50000
+        defaultMaxPerRoute: 200
+        hostnameVerifier: ''
+        keepAlive: 3600000
+        keyPassword: ''
+        keystore: ''
+        maxHeaderCount: 200
+        maxLineLength: -1
+        maxTotal: 400
+        retryTime: 1
+        soKeepAlive: false
+        soReuseAddress: false
+        timeToLive: 3600000
+        timeoutConnection: 50000
+        timeoutSocket: 50000
+  shardingsphere:
+    enabled: true
+    sharding:
+      default-data-source-name: ds0
+      default-key-generator:
+        column: id
+        props:
+          worker:
+            id: ${workerId}
+        type: SNOWFLAKE
+    datasource:
+      names: ds0
+      ds0:
+        connectionTimeoutMilliseconds: 30000
+        idleTimeoutMilliseconds: 60000
+        maintenanceIntervalMilliseconds: 30000
+        maxLifetimeMilliseconds: 1800000
+        maxPoolSize: 50
+        minPoolSize: 50
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        type: com.zaxxer.hikari.HikariDataSource
+        username: ${ocp.datasource.username}
+        password: ${ocp.datasource.password}
+        jdbc-url: jdbc:mysql://${ocp.datasource.ip:192.168.92.216}:${ocp.datasource.port:3306}/log-center?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai
+    
+
+mybatis-plus:
+  mapper-locations: com/open/**/mapper/*Mapper.xml
+  #实体扫描，多个package用逗号或者分号分隔
+  typeAliasesPackage: com.open.capacity.common.model
+  global-config:
+    banner: false
+    db-config:
+      id-type: auto
+
+ocp:
+  swagger:
+    enabled: true
+    title: 日志中心
+    description: 日志中心接口文档
+    version: 1.0
+    base-package: com.open.capacity.log.controller
+
+ 
+  

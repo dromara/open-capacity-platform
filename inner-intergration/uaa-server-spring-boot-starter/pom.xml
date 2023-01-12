@@ -1,0 +1,78 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.open.capacity</groupId>
+    <artifactId>inner-intergration</artifactId>
+    <version>${revision}</version>
+  </parent>
+  <artifactId>uaa-server-spring-boot-starter</artifactId>
+  <description>认证服务支撑</description>
+  <properties>
+  	<kaptcha.version>0.0.9</kaptcha.version>
+  </properties>
+  
+   
+	<dependencies>
+		<dependency>
+			<groupId>com.open.capacity</groupId>
+			<artifactId>db-spring-boot-starter</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.open.capacity</groupId>
+			<artifactId>redis-spring-boot-starter</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.open.capacity</groupId>
+			<artifactId>base-spring-boot-starter</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.social</groupId>
+			<artifactId>spring-social-security</artifactId>
+		</dependency>
+		 <!-- cas -->
+        <dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-cas</artifactId>
+		</dependency> 
+		<dependency>
+			<groupId>org.springframework.session</groupId>
+			<artifactId>spring-session-data-redis</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security.oauth</groupId>
+			<artifactId>spring-security-oauth2</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.open.capacity</groupId>
+			<artifactId>uaa-client-spring-boot-starter</artifactId>
+		</dependency>
+
+		<!-- For Google API -->
+	 	<dependency>
+            <groupId>com.google.api-client</groupId>
+            <artifactId>google-api-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.http-client</groupId>
+            <artifactId>google-http-client-jackson2</artifactId>
+        </dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-websocket</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.passay</groupId>
+			<artifactId>passay</artifactId>
+		</dependency>
+
+	</dependencies>
+</project>

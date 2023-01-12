@@ -1,0 +1,15 @@
+server:
+   port: 5007 #随机端口
+
+spring:
+  application:
+    name: log-center
+#metrics
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always  

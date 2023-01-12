@@ -1,0 +1,11 @@
+server:
+  port: 7000
+
+spring:
+  application:
+    name: @artifactId@
+#  cloud:
+#    nacos:
+#      discovery:
+#        metadata:
+#          version: v1

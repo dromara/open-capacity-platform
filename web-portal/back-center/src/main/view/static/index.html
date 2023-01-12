@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta charset="utf-8"/>
+    <title>JeeCp</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="assets/libs/layui/css/layui.css"/>
+    <link rel="stylesheet" href="assets/css/admin.css"/>
+    <link rel="stylesheet" href="assets/css/viewer.min.css"/>
+    <link rel="stylesheet" href="module/formSelects/formSelects-v4.css"/>
+    <link rel="stylesheet" href="assets/libs/zTree/css/metroStyle/metroStyle.css"/>
+    <!--加载openlayers-->
+    <link rel="stylesheet" href="assets/libs/v5.3.0/ol.css" />
+     <!-- 自定义主题，使用EasyWeb主题生成器生成 -->
+	<!--<link rel="stylesheet" href="assets/css/theme-blue.css"/>-->
+    <!--遮罩-->
+    <link rel="stylesheet" href="assets/css/loading.css"/>
+</head>
+
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <!-- 头部 存放用户登录信息-->
+    <div class="layui-header" p-com="header"></div>
+
+    <!-- 左边菜单栏 关联 config.js  index.js side.html -->
+    <div class="layui-side" p-com="side"></div>
+
+    <!-- 主体部分 -->
+    <div class="layui-body">
+        <div class="layui-tab" lay-allowClose="true" lay-filter="admin-pagetabs">
+            <ul class="layui-tab-title">
+            </ul>
+            <div class="layui-tab-content">
+            </div>
+        </div>
+        <div class="layui-icon admin-tabs-control layui-icon-prev" ew-event="leftPage"></div>
+        <div class="layui-icon admin-tabs-control layui-icon-next" ew-event="rightPage"></div>
+        <div class="layui-icon admin-tabs-control layui-icon-down">
+            <ul class="layui-nav admin-tabs-select" lay-filter="admin-pagetabs-nav">
+                <li class="layui-nav-item" lay-unselect>
+                    <a href="javascript:"></a>
+                    <dl class="layui-nav-child layui-anim-fadein">
+                        <dd ew-event="closeThisTabs" lay-unselect><a href="javascript:">关闭当前标签页</a></dd>
+                        <dd ew-event="closeOtherTabs" lay-unselect><a href="javascript:">关闭其它标签页</a></dd>
+                        <dd ew-event="closeAllTabs" lay-unselect><a href="javascript:">关闭全部标签页</a></dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 底部 -->
+    <div class="layui-footer">Copyright © 2018 JeeCp All rights reserved. <span class="pull-right">Version 2.0</span>
+    </div>
+
+    <!-- 手机屏幕遮罩层 -->
+    <div class="site-mobile-shade"></div>
+    <!--loading框-->
+    <div id="loading" style="backgroud:black;">
+        <div class="box" id="loading-box">
+            <p class="title"><span id="loading-software-name"></span> <span id="loading-lang-init"></span></p>
+            <p id="on-load-file-name">...</p>
+            <div class="circle-box">
+                <div class="circle"></div>
+                <div id="text-percent">0</div>
+                <div class="mask right">
+                    <div id="loading-right" class="circle right"></div>
+                </div>
+                <div class="mask left">
+                    <div id="loading-left" class="circle left"></div>
+                </div>
+            </div>
+        </div>
+        <p id="loading-powered-by" style="color:#ffffff;font-size: 16px;"></p>
+    </div>
+</div>
+<script type="text/javascript" src="module/apiUrl.js"></script>
+<script type="text/javascript" src="assets/libs/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="assets/libs/viewer.min.js"></script>
+<script type="text/javascript" src="assets/libs/viewer-jquery.min.js"></script>
+<script src="assets/libs/sockjs.min.js"></script>
+<script src="assets/libs/stomp.min.js"></script>
+<script type="text/javascript" src="assets/libs/q.js"></script>
+<script type="text/javascript" src="assets/libs/pandyle.min.js"></script>
+<script type="text/javascript" src="assets/libs/layui/layui.js"></script>
+<script type="text/javascript" src="assets/libs/echarts.min.js"></script>
+<script type="text/javascript" src="assets/libs/echarts.helper.js"></script>
+<script type="text/javascript" src="assets/libs/zTree/js/jquery.ztree.all-3.5.min.js"></script>
+<!--<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=d6240AoITIcflQ6w1a3ZsUcIkeH1SLDg"></script>-->
+<!--<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=d6240AoITIcflQ6w1a3ZsUcIkeH1SLDg"></script>-->
+<!--<script type="text/javascript" src="https://mapv.baidu.com/build/mapv.js"></script>-->
+<!--<script type="text/javascript" src="http://api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.js"></script>-->
+<!--<script type="text/javascript" src="assets/libs/baidu-map/TextIconOverlay.js"></script>-->
+<!--<script type="text/javascript" src="assets/libs/baidu-map/MarkerClusterer.js"></script>-->
+<!--<script type="text/javascript" src="http://api.map.baidu.com/library/TrafficControl/1.4/src/TrafficControl_min.js"></script>-->
+<!-- highcharts  -->
+<script src="http://cdn.hcharts.cn/highcharts/highcharts.js"></script>
+<script type="text/javascript" src="assets/libs/v5.3.0/ol.js"></script>
+<!-- webuploader  -->
+<script type="text/javascript" src="http://cdn.staticfile.org/webuploader/0.1.5/webuploader.min.js"></script>
+
+<script>
+    layui.config({
+        base: 'module/'
+    }).extend({
+        formSelects: 'formSelects/formSelects-v4',
+	    treetable: 'treetable-lay/treetable',
+	    dropdown: 'dropdown/dropdown',
+	    notice: 'notice/notice',
+	    step: 'step-lay/step',
+	    dtree: 'dtree/dtree',
+	    citypicker: 'city-picker/city-picker',
+	    tableSelect: 'tableSelect/tableSelect',
+        webuploader:'uploader/webuploader'
+
+    }).use(['config', 'index', 'element', 'admin'], function () {
+        let config = layui.config;
+        let index = layui.index;
+        let element = layui.element;
+        let admin = layui.admin;
+
+        // 检查是否登录
+        if (!config.getToken() || config.getToken() == '') {
+            location.replace('login.html');
+            return;
+        }
+
+		//启动websocket
+		$(function()
+	    {
+	        connect(config.getToken());
+	        kickOut(config.getToken());
+	    });
+	    
+	    //websocket 订阅消息
+	    function connect(token) {
+			var host =  config.base_server + "api-auth"; // 带有端口号
+			var socket = new SockJS( host + "/websocket");
+			stompClient = Stomp.over(socket);
+			stompClient.connect({ 'access_token': token.access_token }, function(frame) {
+				stompClient.subscribe('/topic/notice', function(response) {
+					debugger;
+					//layer 右下脚弹窗
+					layer.open({
+					  type: 1,
+					  skin: 'layui-layer-demo', //样式类名
+					  title: '公告提示',
+					  closeBtn: 1, //不显示关闭按钮
+					  shade: [0],
+					  area: ['250px', '150px'],
+					  offset: 'rb', //右下角弹出
+					  time: 10000, //2秒后自动关闭
+					  anim: 2,
+					  content:  response.body
+					});
+		
+				});
+				 
+			}, function(error) {
+				wsCreateHandler && clearTimeout(wsCreateHandler);
+				wsCreateHandler = setTimeout(function() {
+					console.log("重连...");
+					connect(token);
+					console.log("重连完成");
+				}, 1000);
+			}
+			)
+		}
+		
+		
+		//websocket 踢出消息
+	    function kickOut(token) {
+			var host =  config.base_server + "api-auth"; // 带有端口号
+			var socket = new SockJS( host + "/websocket");
+			stompClient = Stomp.over(socket);
+			stompClient.connect({ 'access_token': token.access_token  }, function(frame) {
+				stompClient.subscribe('/queue/' + token.access_token +  '/remind', function(response) {
+					debugger;
+					//layer 右下脚弹窗
+					layer.open({
+					  type: 1,
+					  skin: 'layui-layer-demo', //样式类名
+					  title: '踢出提示',
+					  closeBtn: 1, //不显示关闭按钮
+					  shade: [0],
+					  area: ['250px', '150px'],
+					  offset: 'rb', //右下角弹出
+					  time: 10000, //2秒后自动关闭
+					  anim: 2,
+					  content:  response.body
+					});
+				
+				});
+				 
+			}, function(error) {
+				wsCreateHandler && clearTimeout(wsCreateHandler);
+				wsCreateHandler = setTimeout(function() {
+					console.log("重连...");
+					connect(token);
+					console.log("重连完成");
+				}, 1000);
+			}
+			)
+		}
+		
+		//关闭连接
+		function disconnect() {
+			if (stompClient != null) {
+				stompClient.disconnect();
+			}
+		}
+		
+		
+        // 检查多标签功能是否开启
+        index.checkPageTabs();
+        
+
+        // 获取当前用户信息
+        let loadUser = function () {
+            index.getUser(function (user) {
+                $('.layui-layout-admin .layui-header').vm(user);
+                index.initLeftNav();
+                element.render('nav');
+                index.initRouter();
+                index.bindEvent();
+                // 添加水印
+                admin.addWater();
+            });
+        };
+
+        // 等待遮罩
+        function loader() {
+            let that = this;
+            let counterLoad = 0, maxLoad = 17; //资源加载计数器||延迟 17
+            let onLoading = "...";
+            //加载提示框
+            let flagFifty = false;//解决圆环动画断裂
+            let itvLoading = setInterval(function () {
+                let percent = parseInt(counterLoad / maxLoad * 100);
+                document.getElementById('text-percent').innerHTML = percent + "%";
+                //loading动画
+                let deg = percent * 3.6;
+                let degRight = deg - 180;
+                if (degRight > 0) {
+                    degRight = 0
+                }
+                if (!flagFifty && percent >= 50) {
+                    setTimeout(function () {
+                        flagFifty = true;
+                    }, 500)
+                }
+                let degLeft = deg - 360;
+                if (degLeft < -180) {
+                    degLeft = -180
+                }
+                if (flagFifty) document.getElementById('loading-left').style.transform = 'rotate(' + degLeft + 'deg)';
+                document.getElementById('loading-right').style.transform = 'rotate(' + degRight + 'deg)';
+            }, 200);
+
+            document.getElementById('loading-box').style.display = 'block';
+            document.getElementById('on-load-file-name').innerHTML = "请稍后";
+
+            document.getElementById('loading-lang-init').innerHTML = '微服务框架';
+            document.getElementById('loading-powered-by').innerHTML = "ocp";
+            //延迟
+            let loadingFiles = setInterval(function(){
+                counterLoad ++;
+                if(counterLoad == maxLoad){ //定义24
+                    clearInterval(loadingFiles);
+                }
+            }, 120);
+            /**  /加载资源 */
+            let loadAt = Date.now();
+            // 加载用户信息
+            loadUser();
+            let animation = setInterval(function () {
+                let isFastLoad = Date.now() - loadAt < 500;
+                if (!isFastLoad) document.getElementById("loading").style.opacity = 1;
+                if (counterLoad === maxLoad) {
+                    onLoading = 'Complete';
+                    clearInterval(animation);
+                    setTimeout(function () {
+                        //执行onload
+                        clearInterval(itvLoading);
+                        $("#loading").remove()
+                        $("#mainDiv").removeClass("itemBackGround");
+                    }, isFastLoad ? 0 : 500);
+                }
+            }, 100);
+        }
+
+        loader();
+    });
+</script>
+</body>
+
+</html>

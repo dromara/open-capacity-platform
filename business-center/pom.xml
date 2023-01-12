@@ -1,0 +1,24 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.open.capacity</groupId>
+        <artifactId>open-capacity-platform</artifactId>
+        <version>${revision}</version>
+    </parent>
+    <artifactId>business-center</artifactId>
+    <packaging>pom</packaging>
+    <description>业务中心</description>
+
+    <modules>
+        <!-- 用户中心 -->
+        <module>user-center</module>
+        <!-- 批处理 -->
+        <module>batch-center</module>
+        <module>file-center</module>
+        <!--工作流-->
+<!--        <module>workflow-center</module>-->
+    	<module>sms-center</module>
+    	<module>codegen-center</module>
+    </modules>
+</project>

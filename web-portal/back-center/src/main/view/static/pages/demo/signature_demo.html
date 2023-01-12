@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>签名校验demo</title>
+</head>
+<body>
+    <div>
+        <p>在放行接口加@SignatureValidation注解后，需要加签名访问</p>
+        <button id="withSignReq" class="layui-btn">有签名请求</button>
+        <button id="withoutSignReq" class="layui-btn layui-btn-danger">无签名请求</button>
+    </div>
+</body>
+<script>
+  layui.use(['admin'], function () {
+    let admin = layui.admin;
+    let $ = layui.jquery;
+
+    $('#withSignReq').click(function () {
+        admin.reqS('api-user/demo/signatureValidation', {}, function (res) {
+            alert(res.msg);
+        }, 'GET')
+    });
+
+    $('#withoutSignReq').click(function () {
+        admin.req('api-user/demo/signatureValidation', {}, function (res) {
+            alert(res.msg);
+        }, 'GET')
+    })
+  })
+</script>
+</html>

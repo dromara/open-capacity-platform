@@ -1,0 +1,22 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.open.capacity</groupId>
+    <artifactId>open-capacity-platform</artifactId>
+    <version>${revision}</version>
+  </parent>
+  <artifactId>tuning-center</artifactId>
+  <packaging>pom</packaging>
+  
+  <modules>
+  	
+  	<module>test-db-spring-boot-starter</module>
+    <module>test-rabbitmq-cloud-stream-starter</module>
+    <module>test-redis-spring-boot-starter</module>
+    <module>test-disruptor-spring-boot-starter</module>
+    <module>test-log-spring-boot-starter</module>
+    <module>test-jmh-spring-boot-starter</module>
+    <module>test-generator-starter</module>
+    <module>test-liteFlow-spring-boot-starter</module>
+  </modules>
+</project>

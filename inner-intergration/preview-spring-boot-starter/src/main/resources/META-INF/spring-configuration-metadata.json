@@ -1,0 +1,65 @@
+{
+  "properties": [
+    {
+      "name": "office.cache.enabled",
+      "type": "java.lang.Boolean",
+      "defaultValue": "true",
+      "description": "开启缓存."
+    },
+    {
+      "name": "office.cache.type",
+      "type": "java.lang.String",
+      "defaultValue": "default",
+      "description": "缓存类型."
+    },
+    {
+      "name": "office.cache.file.dir",
+      "type": "java.lang.String",
+      "defaultValue": "office-file",
+      "description": "缓存保存的文件夹名称."
+    },
+    {
+      "name": "office.plugin.home",
+      "type": "java.lang.String",
+      "defaultValue": "",
+      "description": "office组件的地址,不配置则寻找系统默认的libreOffice或OpenOffice."
+    },
+    {
+      "name": "office.plugin.server.ports",
+      "type": "java.lang.String",
+      "defaultValue": "2001,2002",
+      "description": "office组件的端口占用."
+    },
+    {
+      "name": "office.plugin.task.timeout",
+      "type": "java.lang.String",
+      "defaultValue": "5m",
+      "description": "office文档转换的超时时间."
+    },
+    {
+      "name": "office.cache.clean.cron",
+      "type": "java.lang.String",
+      "defaultValue": "0 0 1 * * *",
+      "description": "缓存清理定时任务执行表达式."
+    }
+  ],
+  "hints": [
+    {
+      "name": "office.cache.type",
+      "values": [
+        {
+          "value": "default",
+          "description": "默认的配置，使用RocksDB缓存预览过的文件."
+        },
+        {
+          "value": "jdk",
+          "description": "基于jdk的Map缓存预览的文件,重启缓存失效."
+        },
+        {
+          "value": "redis",
+          "description": "基于redis（Redisson）缓存预览过的文件."
+        }
+      ]
+    }
+  ]
+}

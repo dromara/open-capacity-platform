@@ -1,0 +1,72 @@
+<div class="layui-card">
+    <div class="layui-card-header">
+        <h2>指定监听日志文件的日志</h2>
+    </div>
+    <div class="layui-card-body">
+		<button id="btn-open">开启日志</button>
+		<button id="btn-close">关闭日志</button>
+		<div id="filelog-container" style="height: 300px; overflow-y: scroll; background: #333; color: #aaa; padding: 10px;">
+		    <div></div>
+		</div>
+    </div>
+</div> 
+ 
+
+<script>
+      layui.use(['form', 'table', 'util', 'config', 'admin', 'upload'], function () {
+        let config = layui.config;
+        let index = layui.index;
+        let admin = layui.admin;
+		debugger;
+ 		var stompClient = null;
+     	//websocket 订阅消息
+	    function connect( ) {
+	    	debugger;
+	    	var token =  config.getToken() ;
+	    	
+			var host =  config.base_server + "api-log"; // 带有端口号
+			var socket = new SockJS( host + "/websocket?access_token="+token.access_token);
+			stompClient = Stomp.over(socket);
+			
+			stompClient.connect({ 'access_token': token.access_token }, function(frame) {
+			
+				stompClient.send("/app/openFile", {'access_token': token.access_token}, JSON.stringify({}));
+			 
+                stompClient.subscribe('/topic/pullFileLogger', function(event) {
+                	debugger;
+                    var content=event.body;
+                    $("#filelog-container div").append(content).append("<br/>");
+                    $("#filelog-container").scrollTop($("#filelog-container div").height() - $("#filelog-container").height());
+                } );
+				 
+			}, function(error) {
+				wsCreateHandler && clearTimeout(wsCreateHandler);
+				wsCreateHandler = setTimeout(function() {
+					console.log("重连...");
+					connect();
+					console.log("重连完成");
+				}, 1000);
+			}
+			)
+		}
+		
+        $('#btn-open').click(function () {
+            connect( ) ;
+        });
+		
+			
+        $('#btn-close').click(function () {
+            disconnect( ) ;
+        });
+		
+		//关闭连接
+		function disconnect() {
+			debugger;
+			if (stompClient != null) {
+				stompClient.disconnect();
+			}
+		}
+    
+        
+    });
+</script>

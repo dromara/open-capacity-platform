@@ -1,0 +1,39 @@
+<propertys>
+	<property name="selectList">
+        <![CDATA[{
+        	##排序
+            "sort": [  
+                {
+                    "timestamp": {
+                        "order": "desc"
+                    }
+                }
+            ],
+			"query": {
+				"bool": {
+					"must": [
+					    #if($query_str)
+						{
+							"match": {
+								"query_str":  #[query_str] 
+							}
+						},
+						#end
+						{
+							"range": {
+								"timestamp": {
+									##统计开始时间
+									"gte": #[startTime],
+									##统计截止时间
+                                    "lt": #[endTime]  
+								}
+							}
+						}
+					]
+				}
+			},
+			"from": #[from],
+			"size": #[size]
+		}]]>
+	</property>
+</propertys>

@@ -1,0 +1,23 @@
+[{
+  "id": "auth-server",
+  "uri": "lb://auth-server",
+  "order": 1,
+   "predicates": [
+    {
+      "name": "Path",
+      "args": {
+        "pattern": "/api-auth/**"
+      }
+    }
+  ],
+  "filters": [
+    {
+      "name": "StripPrefix",
+      "args": {
+        "_genkey_0": "0"
+      }
+    }
+  ],
+ 
+  "description": "测试路由新增"
+}]

@@ -1,0 +1,150 @@
+<link rel="stylesheet" href="module/dtree/dtree.css"/>
+<link rel="stylesheet" href="module/dtree/font/dtreefont.css"/>
+<style>
+    /** dtree选中颜色重写 */
+    .dtree-theme-item-this {
+        background-color: #eeeeee !important;
+    }
+
+    #ltTree {
+        height: 535px;
+        overflow: auto;
+    }
+
+    @media screen and (max-width: 750px) {
+        #ltTree {
+            height: auto;
+        }
+    }
+</style>
+
+<!-- 关闭Tab时顶部标题 -->
+<div class="layui-body-header">
+    <span class="layui-body-header-title">服务实例</span>
+    <span class="layui-breadcrumb pull-right">
+        <a href="#/console/console1">首页</a>
+        <a><cite>服务实例</cite></a>
+    </span>
+</div>
+
+<!-- 正文开始 -->
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <!-- 左树 -->
+        <div class="layui-col-sm12 layui-col-md4 layui-col-lg3">
+            <div class="layui-card">
+                <div class="layui-card-body mini-bar" id="ltTree">
+
+                </div>
+            </div>
+        </div>
+        <!-- 右表 -->
+        <div class="layui-col-sm12 layui-col-md8 layui-col-lg9">
+            <div class="layui-card">
+                <div class="layui-card-body">
+                    <table class="layui-table" id="rtTable" lay-filter="rtTable"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- 表格操作列 -->
+<script type="text/html" id="rtTableBar">
+    <a id="monitor" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="view">查看</a>
+</script>
+
+<!-- js部分 -->
+<script>
+    layui.use(['layer', 'form', 'table', 'util', 'dtree', 'admin' ,'index' , 'element'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var form = layui.form;
+        var table = layui.table;
+        var util = layui.util;
+        var dtree = layui.dtree;
+        var admin = layui.admin;
+		var tableObj =  [ ]  ;
+		
+		// 获取服务列表
+        layer.load(2);
+		admin.req('api-auth/actuator/services', {}, function (services) {
+			layer.closeAll('loading');
+            for (var i = 0; i <  services.data.length; i++) {
+                    var temp ={};
+                    temp.id = services.data[i] ; 
+                    temp.title = services.data[i] ;
+                    tableObj.push(temp);
+            }
+        }, 'GET');
+        // 搜索按钮点击事件
+        $('#btnRtSearch').click(function () {
+            var value = $('#edtSearch').val();
+            table.reload('rtTable', {where: {search: value}});
+        });
+        // 树形渲染
+        setTimeout(function () {
+            $('#ltTree').html('');
+            dtree.render({
+                elem: '#ltTree',
+                data: tableObj
+            });
+        }, 300);
+
+        // 树形点击事件
+        dtree.on('node("ltTree")', function (obj) {
+        		// 获取服务列表
+        	layer.load(2);
+            var data = obj.param;
+			var renderTable = function () {
+            admin.req('api-auth/actuator/instances/'+data.nodeId, {}, function (data) {
+           	 	layer.closeAll('loading');
+                var applications = new Array();
+                for (var i = 0; i <  data.length; i++) {
+                    var instance = data[i] ;
+                     applications.push(instance);
+                }
+                // // 渲染表格
+                table.render({
+                    elem: '#rtTable',
+                    data: applications,
+                    page: false,
+                    cols: [[
+                        {type: 'numbers'},
+                        {field: 'serviceName',width: 300 , sort: true, title: '服务名称'},
+                        {field: 'ip', sort: true, title: 'IP'},
+                        {field: 'port', sort: true, title: '端口'},
+                        {field: 'ephemeral', sort: true, title: '临时实例'},
+                        {field: 'weight', sort: true, title: '权重'},
+                        {field: 'instanceId', sort: true, title: '实例名称'} ,
+                        {align: 'center', toolbar: '#rtTableBar', title: '操作',width: 250}
+                    ]]
+                });
+            }, 'GET');
+        };
+        renderTable();
+        // 监听工具条
+        table.on('tool(rtTable)', function (obj) {
+        	debugger;
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值
+            if (layEvent === 'view') { // 查看
+           		 //基于ip+port 方式查看
+           		  var httpUrl = 'http://' ;
+           		 if(data.port == '8000'){
+           		 	httpUrl = httpUrl +   data.ip + ':' + data.port + '/api-auth/monitoring';
+           		 }else if(data.port == '9900'){
+           		 	alert("网关赞不支持查看");
+           		 	return ;
+           		 }else{
+           		 	httpUrl = httpUrl +   data.ip + ':' + data.port + '/monitoring';
+           		 }
+           		 $("#monitor").attr("href", httpUrl);
+            }  
+        });
+
+     });
+
+    });
+</script>

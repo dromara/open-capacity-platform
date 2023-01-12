@@ -1,0 +1,58 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.open.capacity</groupId>
+		<artifactId>tuning-center</artifactId>
+		<version>${revision}</version>
+	</parent>
+	<artifactId>test-base-spring-boot-starter</artifactId>
+
+
+	<dependencies>
+		
+		<dependency>
+			<groupId>com.open.capacity</groupId>
+			<artifactId>base-spring-boot-starter</artifactId>
+		</dependency>
+		<dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+		<dependency>
+			<groupId>com.open.capacity</groupId>
+			<artifactId>db-spring-boot-starter</artifactId>
+		</dependency>
+		<dependency>
+  			<groupId>com.open.capacity</groupId>
+  			<artifactId>config-spring-boot-starter</artifactId>
+  		</dependency>
+  		 <dependency>
+            <groupId>com.open.capacity</groupId>
+            <artifactId>log-spring-boot-starter</artifactId>
+        </dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<!-- 测试框架 -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+		<dependency>
+          <groupId>org.junit.jupiter</groupId>
+          <artifactId>junit-jupiter-engine</artifactId>
+          </dependency>
+        <dependency>
+          <groupId>org.junit.platform</groupId>
+          <artifactId>junit-platform-launcher</artifactId>
+        </dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+</project>

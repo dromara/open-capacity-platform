@@ -1,0 +1,17 @@
+disruptor:
+  async:
+    boss:
+      ringbufferSize: 4096
+      eventHandlerNum: 8
+    workers:
+      - channel: step1
+        ringbufferSize: 4096
+        eventHandlerNum: 8
+      - channel: step2
+        ringbufferSize: 4096
+        eventHandlerNum: 8
+  executors:
+    - threadPool: step1
+      threadCount: 8
+    - threadPool: step2
+      threadCount: 8

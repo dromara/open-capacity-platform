@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<defaultValidations>
+	<!-- Code execution attacks detection validation rule -->
+	<validation id="execCommand">
+		<![CDATA[(\s|\S)*(exec(\s|\+)+(s|x)p\w+)(\s|\S)*]]>
+	</validation>
+	<!-- XSS attacks detection validation rules -->
+	<validation id="simpleXSS">
+		<![CDATA[(\s|\S)*((%3C)|<)((%2F)|/)*[a-z0-9%]+((%3E)|>)(\s|\S)*]]>
+	</validation>
+	<validation id="imageXSS">
+		<![CDATA[(\s|\S)*((%3C)|<)((%69)|i|I|(%49))((%6D)|m|M|(%4D))((%67)|g|G|(%47))[^\n]+((%3E)|>)(\s|\S)*]]>
+	</validation>
+	<validation id="scriptXSS">
+		<![CDATA[(\s|\S)*((%73)|s)(\s)*((%63)|c)(\s)*((%72)|r)(\s)*((%69)|i)(\s)*((%70)|p)(\s)*((%74)|t)((\s)|(\:)){1}(\s|\S)*]]>
+	</validation>
+	<validation id="evalXSS">
+		<![CDATA[(\s|\S)*((%65)|e)(\s)*((%76)|v)(\s)*((%61)|a)(\s)*((%6C)|l)(\s)*(\()(\s|\S)*]]>
+	</validation>
+	<!-- SQL detection validation rule -->
+	<validation id="SQLCOMMENT">
+ 		<![CDATA['.*([+\s%)]or[+\s%(]|[+\s%)]union[+\s%(]|--|#|/{2,})]]>
+	</validation>
+	<validation id="SQLSYNTAX">
+ 		<![CDATA[(\s|\S)*(insert|delete|update|select|create|drop|truncate|grant|alter|deny|revoke|call|execute|exec|declare|show|rename|set)[+\s%].*(into|from|set|where|table|database|view|index|on|cursor|procedure|trigger|for|password|union|and|or)(\s|\S)*]]>
+	</validation>
+</defaultValidations>

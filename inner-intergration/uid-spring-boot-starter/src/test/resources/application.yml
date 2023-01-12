@@ -1,0 +1,45 @@
+mybatis-plus:
+  configuration:
+    default-fetch-size: 100
+    default-statement-timeout: 30
+    map-underscore-to-camel-case: true
+
+spring:
+  shardingsphere:
+    sharding:
+      default-data-source-name: ds0
+      default-key-generator:
+        column: id
+        props:
+          worker:
+            id: ${workerId}
+        type: SNOWFLAKE
+    datasource:
+      names: ds0
+      ds0:
+        connectionTimeoutMilliseconds: 30000
+        idleTimeoutMilliseconds: 60000
+        maintenanceIntervalMilliseconds: 30000
+        maxLifetimeMilliseconds: 1800000
+        maxPoolSize: 50
+        minPoolSize: 50
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        type: com.zaxxer.hikari.HikariDataSource
+        username: root
+        password: 520owenwangwenQ_s
+        jdbc-url: jdbc:mysql://114.67.115.7:${ocp.datasource.port:3306}/user-center1?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai
+    
+
+
+# 以下为可选配置, 如未指定将采用默认值
+uid:
+  timeBits: 30             # 时间位, 默认:30
+  workerBits: 16           # 机器位, 默认:16
+  seqBits: 7               # 序列号, 默认:7
+  epochStr: "2018-05-01"   # 初始时间, 默认:"2019-02-20"
+  enableBackward: true    # 是否容忍时钟回拨, 默认:true
+  maxBackwardSeconds: 1   # 时钟回拨最长容忍时间（秒）, 默认:1
+  CachedUidGenerator:     # CachedUidGenerator相关参数
+    boostPower: 3          # RingBuffer size扩容参数, 可提高UID生成的吞吐量, 默认:3
+    paddingFactor: 50      # 指定何时向RingBuffer中填充UID, 取值为百分比(0, 100), 默认为50
+    #scheduleInterval: 60    # 默认:不配置此项, 即不实用Schedule线程. 如需使用, 请指定Schedule线程时间间隔, 单位:秒

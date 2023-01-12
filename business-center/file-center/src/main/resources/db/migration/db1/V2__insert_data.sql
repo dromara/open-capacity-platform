@@ -1,0 +1,1 @@
+INSERT INTO `file-center`.`file_info`(`id`, `md5`, `name`, `is_img`, `content_type`, `size`, `path`, `url`, `create_time`, `tenant_id`) VALUES (1, '1', '1', 1, '1', 1, '1', '1', '2022-11-14 00:13:01', '1')
